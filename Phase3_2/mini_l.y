@@ -127,7 +127,7 @@ statement: int_var ASSIGN expression {stringstream ss; ss << $3.code << "= " << 
   | READ read_var {$$.code = strdup($2.code);}
   | WRITE write_var {$$.code = strdup($2.code);}
   | CONTINUE {if(!loopScope) {printf("Error line %d: continue statement not within a loop.\n", l); errorRaised = true;}}
-  | BREAK
+  | BREAK {if(!loopScope){printf("Error line %d: break statement not within a loop.\n", l); errorRaised = true;} else {stringstream ss; $$.label_num = curr_loop++; ss << ":= endloop" << $$.label_num << "\n"; $$.code = strdup(ss.str().c_str());}}
   | RETURN expression {stringstream ss; ss << $2.code << "ret " << $2.ret << "\n"; $$.code = strdup(ss.str().c_str());}
 
 
